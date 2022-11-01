@@ -33,7 +33,7 @@ def cats_detail(request, cat_id):
 
 class CatCreate(CreateView):
   model = Cat
-  fields = '__all__'
+  fields = ['name', 'breed', 'description', 'age']
 
 class CatUpdate(UpdateView):
   model = Cat
@@ -75,3 +75,7 @@ class ToyUpdate(UpdateView):
 class ToyDelete(DeleteView):
   model = Toy
   success_url = '/toys'
+
+def assoc_toy(request, cat_id, toy_id):
+  Cat.objects.get(id=cat_id).toys.add(toy_id)
+  return redirect('detail', cat_id=cat_id)
