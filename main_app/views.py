@@ -19,10 +19,16 @@ def cats_index(request):
 
 def cats_detail(request, cat_id):
   cat = Cat.objects.get(id=cat_id)
+  # First, create a list of the toy ids that the cat DOES have
+  id_list = cat.toys.all().values_list('id')
+  # Query for the toys that the cat doesn't have
+  # by using the exclude() method vs. the filter() method
+  toys_cat_doesnt_have = Toy.objects.exclude(id__in=id_list)
   # instantiate FeedingForm to be rendered in detail.html
   feeding_form = FeedingForm()
   return render(request, 'cats/detail.html', {
-    'cat': cat, 'feeding_form': feeding_form
+    'cat': cat, 'feeding_form': feeding_form,
+    'toys': toys_cat_doesnt_have
   })
 
 class CatCreate(CreateView):
